@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUN'S JOY ACADEMY</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#f4f6f9;color:#333}
+nav{background:#b11226;color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 50px}
+nav h2{font-weight:700}
+nav .nav-buttons button{margin-left:10px}
+.section{padding:60px 50px}
+.section h2{text-align:center;margin-bottom:30px;color:#b11226}
+.card{background:white;padding:25px;border-radius:15px;box-shadow:0 8px 20px rgba(0,0,0,0.1);margin-bottom:20px}
+button{padding:8px 18px;border:none;border-radius:6px;cursor:pointer}
+.primary{background:#b11226;color:white}
+.success{background:#2a9d8f;color:white}
+.logout{background:#333;color:white}
+input{width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid #ccc}
+#adminDashboard,#teacherDashboard,#studentDashboard{display:none}
+.stat-box{background:#b11226;color:white;padding:20px;border-radius:15px;text-align:center;margin-bottom:15px}
+canvas{background:white;padding:15px;border-radius:15px}
+footer{background:#111;color:white;text-align:center;padding:15px;margin-top:30px}
+</style>
+</head>
+<body>
+
+<nav>
+<h2>SUN'S JOY ACADEMY</h2>
+<div class="nav-buttons">
+<button class="primary" onclick="showLogin('admin')">Admin</button>
+<button class="primary" onclick="showLogin('teacher')">Teacher</button>
+<button class="primary" onclick="showLogin('student')">Student</button>
+</div>
+</nav>
+
+<section class="section" id="loginSection">
+<h2>Login Panel</h2>
+<div class="card" style="max-width:400px;margin:auto">
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+<button class="primary" onclick="login()">Login</button>
+<p style="font-size:13px;color:gray;margin-top:8px">
+Admin: SanjayDas / SD@2026<br>
+Teacher: teacher1 / 1234<br>
+Student: student1 / 1111
+</p>
+</div>
+</section>
+
+<!-- ADMIN DASHBOARD -->
+<section class="section" id="adminDashboard">
+<h2>Admin Dashboard - Sanjay Das</h2>
+
+<div class="stat-box">
+<h3>Total Admissions</h3>
+<h1 id="admissionCount">0</h1>
+<button class="success" onclick="increaseAdmission()">Add Admission</button>
+</div>
+
+<div class="card">
+<h3>Attendance by Date</h3>
+<input type="date" id="attendanceDate">
+<button class="success" onclick="markAttendance()">Mark Present</button>
+<h4>Today: <span id="attendanceCount">0</span> Students</h4>
+</div>
+
+<div class="card">
+<h3>Fees Management</h3>
+<input type="text" id="feeStudent" placeholder="Student Name">
+<input type="number" id="feeAmount" placeholder="Amount">
+<button class="success" onclick="addFee()">Add Fee Record</button>
+<ul id="feeList"></ul>
+</div>
+
+<div class="card">
+<h3>Result Management</h3>
+<input type="text" id="resultStudent" placeholder="Student Name">
+<input type="text" id="resultMarks" placeholder="Marks">
+<button class="success" onclick="addResult()">Add Result</button>
+<ul id="resultList"></ul>
+</div>
+
+<div class="card">
+<h3>Analytics Chart</h3>
+<canvas id="schoolChart"></canvas>
+</div>
+
+<button class="logout" onclick="logout()">Logout</button>
+
+<div class="card">
+<h3>Student ID Card Generator</h3>
+<input type="text" id="idName" placeholder="Student Name">
+<input type="text" id="idClass" placeholder="Class">
+<button class="success" onclick="generateID()">Generate ID Card</button>
+<div id="idCardPreview" style="margin-top:15px;"></div>
+</div>
+
+<div class="card">
+<h3>Timetable Management</h3>
+<input type="text" id="timeClass" placeholder="Class">
+<input type="text" id="timeSubject" placeholder="Subject">
+<input type="text" id="timePeriod" placeholder="Period">
+<button class="success" onclick="addTimetable()">Add Timetable</button>
+<ul id="timetableList"></ul>
+</div>
+
+</section>
+
+<!-- TEACHER DASHBOARD -->
+<section class="section" id="teacherDashboard">
+<h2>Teacher Dashboard</h2>
+<div class="card">
+<h3>Mark Attendance</h3>
+<input type="date" id="teacherAttendanceDate">
+<button class="success" onclick="markAttendance()">Mark Present</button>
+</div>
+<button class="logout" onclick="logout()">Logout</button>
+</section>
+
+<!-- STUDENT DASHBOARD -->
+<section class="section" id="studentDashboard">
+<h2>Student Dashboard</h2>
+<div class="card">
+<h3>My Info</h3>
+<p>Name: student1</p>
+<p>Class: X</p>
+<p>Status: Active</p>
+</div>
+<button class="logout" onclick="logout()">Logout</button>
+</section>
+
+<footer>
+© 2026 SUN'S JOY ACADEMY | Complete Smart ERP System
+</footer>
+
+<section class="section" id="advancedSection" style="display:none">
+<h2>Advanced Analytics & Database</h2>
+<div class="card">
+<h3>Student Database</h3>
+<input type="text" id="dbName" placeholder="Student Name">
+<input type="text" id="dbClass" placeholder="Class">
+<button class="success" onclick="addStudentDB()">Add Student</button>
+<ul id="studentDBList"></ul>
+</div>
+
+<div class="card">
+<h3>Download Fee Receipt</h3>
+<input type="text" id="receiptName" placeholder="Student Name">
+<input type="number" id="receiptAmount" placeholder="Amount">
+<button class="success" onclick="generateReceipt()">Generate Receipt</button>
+</div>
+
+<div class="card">
+<h3>Export Full Report</h3>
+<button class="primary" onclick="exportData()">Download Report File</button>
+</div>
+</section>
+
+<script>
+let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
+let admissions = JSON.parse(localStorage.getItem('admissions')) || 0;
+let studentDB = JSON.parse(localStorage.getItem('studentDB')) || [];
+let feeRecords = JSON.parse(localStorage.getItem('feeRecords')) || [];
+let resultRecords = JSON.parse(localStorage.getItem('resultRecords')) || [];
+let currentRole = '';
+
+function showLogin(role){
+currentRole = role;
+document.getElementById('loginSection').scrollIntoView({behavior:'smooth'});
+}
+
+function login(){
+let user=document.getElementById('username').value;
+let pass=document.getElementById('password').value;
+
+if(currentRole==='admin' && user==='SanjayDas' && pass==='SD@2026'){
+showDashboard('adminDashboard');
+}
+else if(currentRole==='teacher' && user==='teacher1' && pass==='1234'){
+showDashboard('teacherDashboard');
+}
+else if(currentRole==='student' && user==='student1' && pass==='1111'){
+showDashboard('studentDashboard');
+}
+else{
+alert('Invalid Login');
+}
+}
+
+function showDashboard(id){
+document.getElementById('adminDashboard').style.display='none';
+document.getElementById('teacherDashboard').style.display='none';
+document.getElementById('studentDashboard').style.display='none';
+document.getElementById(id).style.display='block';
+updateCounts();
+createChart();
+renderStudentDB();
+if(id==='adminDashboard') document.getElementById('advancedSection').style.display='block';
+}
+
+function logout(){
+document.getElementById('adminDashboard').style.display='none';
+document.getElementById('teacherDashboard').style.display='none';
+document.getElementById('studentDashboard').style.display='none';
+}
+
+function markAttendance(){
+let date=document.getElementById('attendanceDate')?.value || document.getElementById('teacherAttendanceDate')?.value;
+if(!date) return alert('Select Date');
+attendanceData[date]=(attendanceData[date]||0)+1;
+localStorage.setItem('attendanceData',JSON.stringify(attendanceData));
+updateCounts();
+createChart();
+}
+
+function increaseAdmission(){
+admissions++;
+localStorage.setItem('admissions',admissions);
+updateCounts();
+createChart();
+}
+
+function updateCounts(){
+let today=new Date().toISOString().split('T')[0];
+document.getElementById('attendanceCount').innerText=attendanceData[today]||0;
+document.getElementById('admissionCount').innerText=admissions;
+}
+
+function createChart(){
+let ctx=document.getElementById('schoolChart');
+if(!ctx) return;
+new Chart(ctx,{type:'bar',data:{labels:Object.keys(attendanceData),datasets:[{label:'Attendance',data:Object.values(attendanceData)}]}});
+}
+
+function generateID(){
+let name=document.getElementById('idName').value;
+let studentClass=document.getElementById('idClass').value;
+if(!name||!studentClass) return alert('Enter details');
+document.getElementById('idCardPreview').innerHTML=`
+<div style="border:2px solid #b11226;padding:15px;border-radius:10px;width:250px">
+<h4>SUN'S JOY ACADEMY</h4>
+<p><strong>Name:</strong> ${name}</p>
+<p><strong>Class:</strong> ${studentClass}</p>
+<p><strong>ID:</strong> SJ-${Math.floor(Math.random()*10000)}</p>
+</div>`;
+}
+
+function addTimetable(){
+let cls=document.getElementById('timeClass').value;
+let sub=document.getElementById('timeSubject').value;
+let per=document.getElementById('timePeriod').value;
+if(!cls||!sub||!per) return alert('Enter timetable details');
+let li=document.createElement('li');
+li.innerText=`Class ${cls} - ${sub} (${per})`;
+document.getElementById('timetableList').appendChild(li);
+}
+
+function addStudentDB(){
+let name=document.getElementById('dbName').value;
+let cls=document.getElementById('dbClass').value;
+if(!name||!cls) return alert('Enter details');
+studentDB.push({name,cls});
+localStorage.setItem('studentDB',JSON.stringify(studentDB));
+renderStudentDB();
+}
+
+function renderStudentDB(){
+let list=document.getElementById('studentDBList');
+if(!list) return;
+list.innerHTML='';
+studentDB.forEach((s,i)=>{
+let li=document.createElement('li');
+li.innerHTML=`${s.name} - Class ${s.cls} <button onclick="deleteStudent(${i})">Delete</button>`;
+list.appendChild(li);
+});
+}
+
+function deleteStudent(index){
+studentDB.splice(index,1);
+localStorage.setItem('studentDB',JSON.stringify(studentDB));
+renderStudentDB();
+}
+
+function generateReceipt(){
+let name=document.getElementById('receiptName').value;
+let amount=document.getElementById('receiptAmount').value;
+if(!name||!amount) return alert('Enter details');
+let receipt=`SUN'S JOY ACADEMY
+Fee Receipt
+Student: ${name}
+Amount: ₹${amount}
+Date: ${new Date().toLocaleDateString()}`;
+let blob=new Blob([receipt],{type:'text/plain'});
+let a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='fee_receipt.txt';
+a.click();
+}
+
+function exportData(){
+let fullData={attendanceData,admissions,studentDB,feeRecords,resultRecords};
+let blob=new Blob([JSON.stringify(fullData,null,2)],{type:'application/json'});
+let a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='school_full_report.json';
+a.click();
+}
+</script>
+
+</body>
+</html>
